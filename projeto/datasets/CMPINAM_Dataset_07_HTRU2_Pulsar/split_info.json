@@ -1,0 +1,19 @@
+{
+  "source_url": "https://archive.ics.uci.edu/static/public/372/htru2.zip",
+  "source_instances": 17898,
+  "source_features": 8,
+  "target": "is_pulsar",
+  "test_size": 0.2,
+  "random_seed": 42,
+  "stratified_by": "is_pulsar",
+  "train_rows": 14318,
+  "test_rows": 3580,
+  "train_class_counts": {
+    "0": 13007,
+    "1": 1311
+  },
+  "test_class_counts": {
+    "0": 3252,
+    "1": 328
+  }
+}

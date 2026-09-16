@@ -1,0 +1,98 @@
+Card 1: Introdução ao Aprendizado de Máquina
+O Aprendizado de Máquina (AM) não é apenas uma ideia futurista. Ele já está presente no cotidiano em aplicações como filtros de spam, sistemas de recomendação e reconhecimento de voz. Diferente de programas tradicionais, o AM permite que computadores aprendam com dados e melhorem seu desempenho em determinadas tarefas ao longo do tempo.
+---
+
+Card 2: Definições Fundamentais
+Arthur Samuel (1959): “Aprendizado de Máquina é o campo de estudo que dá aos computadores a habilidade de aprender sem serem explicitamente programados.”  
+Tom Mitchell (1997): “Um programa aprende com experiência E em relação a uma tarefa T e medida de desempenho P, se seu desempenho em T, medido por P, melhora com a experiência E.”  
+Exemplo: filtro de spam (Tarefa: classificar emails; Experiência: dados de emails marcados; Medida: acurácia).
+---
+
+Card 3: Por que Usar Aprendizado de Máquina?
+1. Reduz listas complexas de regras (ex: filtro de spam tradicional).  
+2. Resolve problemas muito complexos ou sem solução algorítmica (ex: reconhecimento de fala).  
+3. Adapta-se a ambientes em mudança (ex: novos tipos de spam).  
+4. Descobre padrões em grandes volumes de dados (Data Mining).
+---
+
+Card 4: Principais Tipos de Aprendizado de Máquina
+1. Supervisionado: treino com rótulos (classificação, regressão).  
+2. Não supervisionado: treino sem rótulos (clustering, redução de dimensionalidade).  
+3. Semissupervisionado: parte dos dados rotulados, parte não.  
+4. Reforço: aprendizado por tentativa e erro com recompensas.
+---
+
+Card 5: Aprendizado Supervisionado
+- Classificação: atribuir categorias (spam ou não spam).  
+- Regressão: prever valores numéricos (preço de um carro).  
+Algoritmos comuns: k-NN, Regressão Linear, Regressão Logística, SVM, Árvores de Decisão, Redes Neurais.
+---
+
+Card 6: Aprendizado Não Supervisionado
+- Clustering: agrupar dados semelhantes (k-Means, HCA).  
+- Redução de dimensionalidade: simplificar dados (PCA, t-SNE).  
+- Detecção de anomalias: identificar padrões incomuns (fraudes).  
+- Regras de associação: encontrar relações (ex: quem compra molho BBQ compra carne).
+---
+
+Card 7: Semissupervisionado e Reforço
+- Semissupervisionado: utiliza poucos dados rotulados e muitos não rotulados (ex: Google Photos).  
+- Reforço: agentes aprendem interagindo com o ambiente e recebendo recompensas (ex: AlphaGo, robôs).
+---
+
+Card 8: Batch Learning vs Online Learning
+- Batch: treinamento com todos os dados de uma vez (offline). Necessário reentreinar para novos dados.  
+- Online: aprendizado incremental, adaptando-se continuamente a fluxos de dados (ex: preços de ações).  
+Conceito importante: taxa de aprendizado (learning rate).
+---
+
+Card 9: Instance-Based vs Model-Based Learning
+- Instance-Based: memoriza exemplos e compara novas instâncias (ex: k-NN).  
+- Model-Based: constrói modelos a partir dos dados (ex: regressão linear prevendo satisfação de vida a partir do PIB per capita).  
+Fluxo: coletar dados → escolher modelo → treinar → avaliar → prever novos casos.
+---
+
+Card 10: Desafios do Aprendizado de Máquina
+- Dados insuficientes.  
+- Dados não representativos (viés de amostragem).  
+- Dados de baixa qualidade (ruídos, erros).  
+- Recursos irrelevantes.  
+- Overfitting: modelo complexo demais, aprende “ruídos”.  
+- Underfitting: modelo simples demais, não captura padrões.
+---
+
+Card 11: Regularização e Generalização
+- Overfitting pode ser combatido por regularização (restrições no modelo).  
+- Hiperparâmetros: parâmetros definidos antes do treinamento (ex: intensidade da regularização).  
+- Equilíbrio necessário: modelo nem muito simples nem muito complexo.
+---
+
+Card 12: Teste, Validação e Avaliação
+- Conjunto de treino e teste (geralmente 80/20).  
+- Generalization error: erro em novos dados.  
+- Validação cruzada: particiona dados em múltiplas combinações para avaliar desempenho.  
+- Importância do ajuste de hiperparâmetros sem viciar no conjunto de teste.
+---
+
+Card 13: Teorema do No Free Lunch
+Não existe um modelo universalmente melhor para todos os problemas. O desempenho depende da natureza dos dados. É necessário testar diferentes modelos e escolher o mais adequado para cada contexto.
+---
+
+Card 14: Resumo do Capítulo
+- AM = máquinas aprendendo com dados.  
+- Tipos: supervisionado, não supervisionado, semissupervisionado, reforço.  
+- Métodos: batch vs online; instance-based vs model-based.  
+- Desafios: dados ruins, overfitting, underfitting.  
+- Avaliação: treino, validação e teste.  
+- Nenhum modelo é sempre o melhor: depende do problema.
+---
+
+Card 15: Exercícios Propostos
+1. Defina Aprendizado de Máquina.  
+2. Cite quatro áreas em que ele se destaca.  
+3. O que é um conjunto de treino rotulado?  
+4. Qual a diferença entre classificação e regressão?  
+5. Dê exemplos de tarefas não supervisionadas.  
+6. Explique o que é overfitting e como evitá-lo.  
+7. O que é validação cruzada e por que é útil?
+---

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validação Cruzada | Introdução ao Aprendizado de Máquina</title>
+  <style>
+    :root{
+      --bg:#f6f8fb;
+      --paper:#ffffff;
+      --ink:#172033;
+      --muted:#5e6a7d;
+      --blue:#0b5c8e;
+      --blue-2:#1e9bd7;
+      --orange:#f28c28;
+      --red:#e74c3c;
+      --green:#2eaa55;
+      --purple:#8e44ad;
+      --line:#d8e0eb;
+      --soft-blue:#e9f5fb;
+      --soft-orange:#fff3e5;
+      --soft-green:#eaf8ef;
+      --soft-red:#fff0ee;
+      --shadow:0 14px 35px rgba(20,35,60,.10);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--ink);
+      line-height:1.55;
+    }
+    header.hero{
+      min-height:78vh;
+      display:grid;
+      place-items:center;
+      padding:72px 28px;
+      background:linear-gradient(135deg,#073b5c 0%,#0b5c8e 52%,#0f7cae 100%);
+      color:white;
+      position:relative;
+      overflow:hidden;
+    }
+    header.hero::before{
+      content:"";
+      position:absolute;
+      inset:-20%;
+      background:
+        radial-gradient(circle at 16% 22%,rgba(255,255,255,.16),transparent 22%),
+        radial-gradient(circle at 86% 72%,rgba(242,140,40,.25),transparent 20%),
+        radial-gradient(circle at 62% 18%,rgba(255,255,255,.10),transparent 18%);
+      transform:rotate(-6deg);
+    }
+    .hero-inner{position:relative;max-width:1100px;width:100%}
+    .kicker{font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#b7e6ff;margin-bottom:18px}
+    h1{font-size:clamp(3rem,8vw,7rem);line-height:.95;margin:0 0 24px;font-weight:900;letter-spacing:-.06em}
+    .hero p{font-size:clamp(1.1rem,2vw,1.5rem);max-width:760px;color:#e8f6ff;margin:0 0 28px}
+    .hero-meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);font-weight:700}
+    nav.toc{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+    nav.toc .wrap{max-width:1180px;margin:auto;padding:12px 22px;display:flex;gap:10px;overflow-x:auto}
+    nav.toc a{white-space:nowrap;text-decoration:none;color:var(--blue);font-weight:800;font-size:.9rem;padding:8px 12px;border-radius:999px;background:#eef6fb}
+    main{max-width:1180px;margin:0 auto;padding:36px 22px 80px}
+    section.slide{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:34px;margin:28px 0;position:relative;overflow:hidden}
+    section.slide::after{content:"";position:absolute;right:-70px;top:-70px;width:180px;height:180px;background:var(--soft-blue);border-radius:50%;z-index:0}
+    section.slide>*{position:relative;z-index:1}
+    .slide-title{display:flex;align-items:flex-start;gap:18px;margin-bottom:24px}
+    .num{flex:0 0 auto;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:1.35rem;font-weight:900;color:white;background:var(--blue);box-shadow:0 8px 18px rgba(11,92,142,.25)}
+    h2{font-size:clamp(1.8rem,3vw,2.8rem);line-height:1.08;margin:0;letter-spacing:-.04em}
+    .subtitle{color:var(--muted);font-size:1.08rem;margin:8px 0 0;max-width:780px}
+    .grid{display:grid;gap:22px}
+    .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .card{border:1px solid var(--line);border-radius:18px;padding:22px;background:#fff;box-shadow:0 7px 18px rgba(20,35,60,.06)}
+    .card.blue{background:var(--soft-blue);border-color:#cae6f4}.card.orange{background:var(--soft-orange);border-color:#f6d8b5}.card.green{background:var(--soft-green);border-color:#ccebd6}.card.red{background:var(--soft-red);border-color:#f3c8c1}
+    .card h3{font-size:1.25rem;margin:0 0 8px}.card p{margin:0;color:#2a3446}.card ul{margin:8px 0 0;padding-left:22px}.card li{margin:6px 0}
+    .legend{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0 0}.legend span{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);padding:8px 12px;border-radius:999px;font-weight:800;color:#354056}.dot{width:13px;height:13px;border-radius:50%;display:inline-block}.train{background:var(--red)}.test{background:var(--blue-2)}.valid{background:var(--orange)}.model{background:#111}.alt{background:var(--green)}
+    .callout{border-left:6px solid var(--orange);background:#fff8ef;border-radius:16px;padding:18px 20px;margin-top:20px;color:#3a2b18}.callout strong{color:#8c4a00}
+    .formula{font-family:"Segoe UI",Arial,sans-serif;font-weight:800;background:#f0f4f8;border:1px dashed #b9c7d8;border-radius:14px;padding:14px 16px;display:inline-block;margin-top:10px}
+    .svgbox{background:#fbfcfe;border:1px solid var(--line);border-radius:18px;padding:12px;min-height:260px;display:grid;place-items:center;overflow:hidden}
+    svg{max-width:100%;height:auto}.axis{stroke:#7b8494;stroke-width:4;stroke-linecap:round}.tick{stroke:#9aa3b2;stroke-width:3}.arrow{stroke:#d12b8a;stroke-width:5;fill:none;marker-end:url(#arrowHead);stroke-linecap:round}.dash{stroke:#6a7180;stroke-width:3;stroke-dasharray:5 7;fill:none}.fit{stroke:#111;stroke-width:5;stroke-linecap:round}.squiggle{stroke:var(--green);stroke-width:5;fill:none;stroke-linecap:round}.err{stroke:#ef7f7f;stroke-width:3;stroke-dasharray:6 6}.fold-block{rx:8;stroke:#333;stroke-width:2;stroke-dasharray:5 4}.fold-train{fill:#ffc7bd}.fold-test{fill:#8bd5f4}.fold-muted{fill:#d7dbe2}.label{font-size:18px;font-weight:800;fill:#172033}.small{font-size:14px;font-weight:700;fill:#5e6a7d}.big-word{font-size:clamp(2rem,5vw,4.5rem);font-weight:900;letter-spacing:-.06em;color:var(--blue);margin:10px 0}
+    .step-list{counter-reset:step;display:grid;gap:12px}.step{counter-increment:step;display:grid;grid-template-columns:42px 1fr;gap:14px;align-items:start}.step::before{content:counter(step);width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--blue);color:#fff;font-weight:900}.step strong{display:block;margin-bottom:3px}.step p{margin:0;color:var(--muted)}
+    .exercise{background:#fcfcff;border:1px solid var(--line);border-radius:18px;padding:22px;margin-top:16px}.exercise h3{margin-top:0}.answer{margin-top:10px;padding:14px;border-radius:14px;background:#f4f7fb;color:#4b5568}
+    footer{max-width:1180px;margin:0 auto 40px;padding:0 22px;color:#6d7788;text-align:center;font-size:.95rem}
+    @media(max-width:840px){.grid.two,.grid.three{grid-template-columns:1fr}section.slide{padding:24px}.slide-title{gap:12px}.num{width:44px;height:44px}.hero-meta{gap:8px}}
+    @media print{nav.toc{display:none}body{background:white}header.hero{min-height:auto;padding:48px 24px}section.slide{break-inside:avoid;box-shadow:none}}
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="kicker">Introdução ao Aprendizado de Máquina</div>
+      <h1>Validação<br>Cruzada</h1>
+      <p>Como avaliar modelos de forma mais confiável, evitando conclusões baseadas em uma única divisão dos dados.</p>
+      <div class="hero-meta">
+        <span class="pill">Disciplina: Introdução ao Aprendizado de Máquina</span>
+        <span class="pill">Professor: Everton Meyer da Silva</span>
+        <span class="pill">Tema: Cross Validation</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <div class="wrap">
+      <a href="#problema">Problema</a>
+      <a href="#holdout">Holdout</a>
+      <a href="#leakage">Data Leakage</a>
+      <a href="#cv">Ideia central</a>
+      <a href="#kfold">K-Fold</a>
+      <a href="#modelos">Comparação</a>
+      <a href="#loocv">LOOCV</a>
+      <a href="#sklearn">Scikit-Learn</a>
+      <a href="#exercicios">Exercícios</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="slide" id="problema">
+      <div class="slide-title">
+        <div class="num">1</div>
+        <div>
+          <h2>O problema: como saber se o modelo generaliza?</h2>
+          <p class="subtitle">Um modelo não deve apenas memorizar os dados que já viu. Ele precisa funcionar bem em dados novos.</p>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="svgbox">
+          <svg width="520" height="300" viewBox="0 0 520 300" role="img" aria-label="Pontos de dados e divisão entre treino e teste">
+            <defs><marker id="arrowHead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#d12b8a"/></marker></defs>
+            <line class="axis" x1="60" y1="240" x2="260" y2="240"/><line class="axis" x1="60" y1="240" x2="60" y2="55"/>
+            <line class="tick" x1="120" y1="240" x2="120" y2="250"/><line class="tick" x1="190" y1="240" x2="190" y2="250"/>
+            <circle cx="92" cy="200" r="12" fill="#e74c3c"/><circle cx="128" cy="175" r="12" fill="#e74c3c"/><circle cx="168" cy="145" r="12" fill="#e74c3c"/><circle cx="205" cy="115" r="12" fill="#e74c3c"/>
+            <circle cx="112" cy="128" r="12" fill="#1e9bd7"/><circle cx="228" cy="170" r="12" fill="#1e9bd7"/>
+            <text x="72" y="36" class="label">Dados observados</text>
+            <path class="arrow" d="M282 120 C330 70,390 72,440 108"/>
+            <text x="300" y="158" class="label">O que será treino?</text>
+            <text x="300" y="184" class="label">O que será teste?</text>
+          </svg>
+        </div>
+        <div class="card blue">
+          <h3>Ideia fundamental</h3>
+          <p>Separar dados em <strong>treino</strong> e <strong>teste</strong> ajuda a estimar como o modelo se comportará quando receber dados que ainda não conhece.</p>
+          <div class="legend">
+            <span><i class="dot train"></i> Treino</span>
+            <span><i class="dot test"></i> Teste</span>
+          </div>
+          <div class="callout"><strong>Ponto-chave:</strong> avaliar no mesmo dado usado para treinar pode dar uma falsa impressão de desempenho.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="holdout">
+      <div class="slide-title">
+        <div class="num">2</div>
+        <div>
+          <h2>A divisão treino/teste é útil, mas pode variar muito</h2>
+          <p class="subtitle">Uma única divisão dos dados pode favorecer ou prejudicar um modelo por acaso.</p>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card orange">
+          <h3>Holdout simples</h3>
+          <p>No método holdout, separamos uma parte para treino e outra para teste. Isso é simples e muito usado.</p>
+          <ul>
+            <li>Exemplo: 70% treino e 30% teste.</li>
+            <li>Problema: outra divisão poderia gerar outro resultado.</li>
+            <li>Em bases pequenas, essa variação pode ser grande.</li>
+          </ul>
+        </div>
+        <div class="svgbox">
+          <svg width="520" height="300" viewBox="0 0 520 300" role="img" aria-label="Duas divisões diferentes dos dados">
+            <defs><marker id="arrowHead2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#d12b8a"/></marker></defs>
+            <g transform="translate(25,20)">
+              <text x="65" y="20" class="label">Divisão A</text>
+              <line class="axis" x1="45" y1="220" x2="215" y2="220"/><line class="axis" x1="45" y1="220" x2="45" y2="50"/>
+              <circle cx="78" cy="182" r="11" fill="#e74c3c"/><circle cx="110" cy="145" r="11" fill="#e74c3c"/><circle cx="148" cy="122" r="11" fill="#e74c3c"/><circle cx="184" cy="86" r="11" fill="#e74c3c"/>
+              <circle cx="90" cy="95" r="11" fill="#1e9bd7"/><circle cx="170" cy="172" r="11" fill="#1e9bd7"/>
+              <line class="fit" x1="62" y1="198" x2="198" y2="73"/>
+            </g>
+            <g transform="translate(265,20)">
+              <text x="65" y="20" class="label">Divisão B</text>
+              <line class="axis" x1="45" y1="220" x2="215" y2="220"/><line class="axis" x1="45" y1="220" x2="45" y2="50"/>
+              <circle cx="78" cy="182" r="11" fill="#1e9bd7"/><circle cx="110" cy="145" r="11" fill="#e74c3c"/><circle cx="148" cy="122" r="11" fill="#1e9bd7"/><circle cx="184" cy="86" r="11" fill="#e74c3c"/>
+              <circle cx="90" cy="95" r="11" fill="#e74c3c"/><circle cx="170" cy="172" r="11" fill="#e74c3c"/>
+              <line class="fit" x1="62" y1="210" x2="198" y2="67"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="leakage">
+      <div class="slide-title">
+        <div class="num">3</div>
+        <div>
+          <h2>O que não podemos fazer: treinar e testar nos mesmos dados</h2>
+          <p class="subtitle">Quando a avaliação usa informação que já participou do treinamento, temos uma estimativa otimista demais.</p>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="svgbox">
+          <svg width="520" height="300" viewBox="0 0 520 300" role="img" aria-label="Data leakage e overfitting">
+            <g transform="translate(20,20)">
+              <text x="50" y="20" class="label">Treino</text>
+              <line class="axis" x1="45" y1="220" x2="215" y2="220"/><line class="axis" x1="45" y1="220" x2="45" y2="50"/>
+              <circle cx="72" cy="190" r="11" fill="#e74c3c"/><circle cx="105" cy="160" r="11" fill="#e74c3c"/><circle cx="135" cy="130" r="11" fill="#e74c3c"/><circle cx="168" cy="110" r="11" fill="#e74c3c"/><circle cx="198" cy="82" r="11" fill="#e74c3c"/>
+              <line class="fit" x1="60" y1="205" x2="206" y2="72"/>
+            </g>
+            <g transform="translate(270,20)">
+              <text x="50" y="20" class="label">Teste errado</text>
+              <line class="axis" x1="45" y1="220" x2="215" y2="220"/><line class="axis" x1="45" y1="220" x2="45" y2="50"/>
+              <circle cx="72" cy="190" r="11" fill="#1e9bd7"/><circle cx="105" cy="160" r="11" fill="#1e9bd7"/><circle cx="135" cy="130" r="11" fill="#1e9bd7"/><circle cx="168" cy="110" r="11" fill="#1e9bd7"/><circle cx="198" cy="82" r="11" fill="#1e9bd7"/>
+              <line class="fit" x1="60" y1="205" x2="206" y2="72"/>
+            </g>
+          </svg>
+        </div>
+        <div class="card red">
+          <h3>Data leakage</h3>
+          <p><strong>Data leakage</strong> ocorre quando informações do conjunto de teste acabam influenciando o treinamento.</p>
+          <div class="callout"><strong>Consequência:</strong> o modelo parece melhor do que realmente é, pois foi avaliado com informação que não deveria conhecer.</div>
+          <p style="margin-top:14px">Isso está diretamente ligado ao risco de <strong>overfitting</strong>: o modelo aprende padrões específicos dos dados de treino, mas não generaliza bem.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="cv">
+      <div class="slide-title">
+        <div class="num">4</div>
+        <div>
+          <h2>A ideia da validação cruzada</h2>
+          <p class="subtitle">Em vez de depender de uma única divisão, usamos várias divisões. Cada parte dos dados será usada como teste uma vez.</p>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card green">
+          <h3>Cross Validation</h3>
+          <p>A validação cruzada divide os dados em partes chamadas <strong>folds</strong>. Em cada iteração, alguns folds treinam o modelo e um fold avalia o desempenho.</p>
+          <div class="formula">Erro médio = média dos erros obtidos em cada fold</div>
+        </div>
+        <div class="svgbox">
+          <svg width="520" height="260" viewBox="0 0 520 260" role="img" aria-label="Três folds usados em validação cruzada">
+            <defs><marker id="arrowHead4" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#d12b8a"/></marker></defs>
+            <text x="40" y="32" class="label">Dados</text>
+            <rect x="40" y="58" width="80" height="80" rx="14" fill="#ffd0c8" stroke="#e74c3c" stroke-width="3"/><text x="62" y="105" class="label">F1</text>
+            <rect x="130" y="58" width="80" height="80" rx="14" fill="#ffd0c8" stroke="#e74c3c" stroke-width="3"/><text x="152" y="105" class="label">F2</text>
+            <rect x="220" y="58" width="80" height="80" rx="14" fill="#8bd5f4" stroke="#1e9bd7" stroke-width="3"/><text x="242" y="105" class="label">F3</text>
+            <path class="arrow" d="M315 96 C360 96,380 96,425 96"/>
+            <text x="345" y="150" class="small">treina com F1 e F2</text>
+            <text x="345" y="174" class="small">testa com F3</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="kfold">
+      <div class="slide-title">
+        <div class="num">5</div>
+        <div>
+          <h2>Exemplo visual: 3-Fold Cross Validation</h2>
+          <p class="subtitle">Com 3 folds, fazemos 3 iterações. Em cada uma, um fold diferente é usado como teste.</p>
+        </div>
+      </div>
+      <div class="grid three">
+        <div class="card">
+          <h3>Iteração 1</h3>
+          <div class="svgbox" style="min-height:210px">
+            <svg width="310" height="180" viewBox="0 0 310 180">
+              <rect class="fold-block fold-test" x="20" y="30" width="75" height="95"/><text x="45" y="86" class="label">F1</text>
+              <rect class="fold-block fold-train" x="110" y="30" width="75" height="95"/><text x="135" y="86" class="label">F2</text>
+              <rect class="fold-block fold-train" x="200" y="30" width="75" height="95"/><text x="225" y="86" class="label">F3</text>
+              <text x="32" y="155" class="small">Teste</text><text x="128" y="155" class="small">Treino</text><text x="218" y="155" class="small">Treino</text>
+            </svg>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Iteração 2</h3>
+          <div class="svgbox" style="min-height:210px">
+            <svg width="310" height="180" viewBox="0 0 310 180">
+              <rect class="fold-block fold-train" x="20" y="30" width="75" height="95"/><text x="45" y="86" class="label">F1</text>
+              <rect class="fold-block fold-test" x="110" y="30" width="75" height="95"/><text x="135" y="86" class="label">F2</text>
+              <rect class="fold-block fold-train" x="200" y="30" width="75" height="95"/><text x="225" y="86" class="label">F3</text>
+              <text x="38" y="155" class="small">Treino</text><text x="122" y="155" class="small">Teste</text><text x="218" y="155" class="small">Treino</text>
+            </svg>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Iteração 3</h3>
+          <div class="svgbox" style="min-height:210px">
+            <svg width="310" height="180" viewBox="0 0 310 180">
+              <rect class="fold-block fold-train" x="20" y="30" width="75" height="95"/><text x="45" y="86" class="label">F1</text>
+              <rect class="fold-block fold-train" x="110" y="30" width="75" height="95"/><text x="135" y="86" class="label">F2</text>
+              <rect class="fold-block fold-test" x="200" y="30" width="75" height="95"/><text x="225" y="86" class="label">F3</text>
+              <text x="38" y="155" class="small">Treino</text><text x="128" y="155" class="small">Treino</text><text x="212" y="155" class="small">Teste</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="callout"><strong>Resultado:</strong> ao final, temos três medidas de erro/desempenho. A média dessas medidas é uma estimativa mais estável do desempenho do modelo.</div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-title">
+        <div class="num">6</div>
+        <div>
+          <h2>Por que isso ajuda?</h2>
+          <p class="subtitle">A validação cruzada reduz a dependência de uma única escolha de treino/teste.</p>
+        </div>
+      </div>
+      <div class="grid three">
+        <div class="card blue"><h3>Uso melhor dos dados</h3><p>Todos os exemplos participam do treino em algumas iterações e do teste em outra.</p></div>
+        <div class="card green"><h3>Estimativa mais robusta</h3><p>A média dos resultados reduz o efeito de uma divisão específica que pode ter sido sorteada.</p></div>
+        <div class="card orange"><h3>Comparação mais justa</h3><p>Modelos diferentes podem ser comparados usando as mesmas divisões.</p></div>
+      </div>
+    </section>
+
+    <section class="slide" id="modelos">
+      <div class="slide-title">
+        <div class="num">7</div>
+        <div>
+          <h2>Usando validação cruzada para comparar modelos</h2>
+          <p class="subtitle">Podemos comparar modelos diferentes observando o desempenho médio em várias divisões dos dados.</p>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="svgbox">
+          <svg width="530" height="330" viewBox="0 0 530 330" role="img" aria-label="Comparação entre modelo linear e modelo flexível">
+            <line class="axis" x1="55" y1="255" x2="260" y2="255"/><line class="axis" x1="55" y1="255" x2="55" y2="60"/>
+            <circle cx="82" cy="220" r="10" fill="#ffc1b8"/><circle cx="113" cy="187" r="10" fill="#ffc1b8"/><circle cx="145" cy="140" r="10" fill="#ffc1b8"/><circle cx="180" cy="115" r="10" fill="#ffc1b8"/><circle cx="216" cy="92" r="10" fill="#ffc1b8"/>
+            <circle cx="125" cy="102" r="12" fill="#1e9bd7"/><circle cx="225" cy="172" r="12" fill="#1e9bd7"/>
+            <line class="fit" x1="72" y1="230" x2="235" y2="82"/>
+            <path class="squiggle" d="M72 230 C95 180,106 225,132 142 C150 90,185 145,205 95 C218 65,230 105,240 78"/>
+            <line class="err" x1="125" y1="102" x2="125" y2="182"/><line class="err" x1="225" y1="172" x2="225" y2="94"/>
+            <text x="292" y="100" class="label">Modelo linear</text><line x1="292" y1="120" x2="370" y2="120" class="fit"/>
+            <text x="292" y="175" class="label">Modelo flexível</text><path class="squiggle" d="M292 195 C310 160,330 210,350 170 C370 125,390 190,410 140"/>
+            <text x="292" y="255" class="small">A pergunta não é: “qual encaixa melhor no treino?”</text>
+            <text x="292" y="280" class="small">A pergunta é: “qual generaliza melhor?”</text>
+          </svg>
+        </div>
+        <div class="card green">
+          <h3>Comparação correta</h3>
+          <p>Um modelo muito flexível pode se ajustar bem ao treino, mas errar em dados novos. A validação cruzada ajuda a perceber isso.</p>
+          <div class="legend">
+            <span><i class="dot model"></i> Modelo linear</span>
+            <span><i class="dot alt"></i> Modelo flexível</span>
+          </div>
+          <div class="callout"><strong>Ideia:</strong> escolhemos o modelo com melhor desempenho médio nos folds, não apenas o que mais se ajusta aos dados de treino.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-title">
+        <div class="num">8</div>
+        <div>
+          <h2>10-Fold Cross Validation</h2>
+          <p class="subtitle">Quando temos uma quantidade razoável de dados, uma escolha comum é usar 10 folds.</p>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card blue">
+          <h3>Como funciona?</h3>
+          <div class="step-list">
+            <div class="step"><div><strong>Embaralhar os dados</strong><p>Quando apropriado, embaralhamos a ordem dos exemplos.</p></div></div>
+            <div class="step"><div><strong>Dividir em 10 partes</strong><p>Cada parte é um fold.</p></div></div>
+            <div class="step"><div><strong>Repetir 10 vezes</strong><p>Em cada repetição, 9 folds treinam e 1 fold testa.</p></div></div>
+            <div class="step"><div><strong>Calcular a média</strong><p>A média dos resultados representa o desempenho estimado.</p></div></div>
+          </div>
+        </div>
+        <div class="svgbox">
+          <svg width="520" height="310" viewBox="0 0 520 310" role="img" aria-label="Esquema de validação cruzada com 10 folds">
+            <text x="38" y="30" class="label">10 iterações</text>
+            <g transform="translate(35,50)">
+              <script type="application/ecmascript"><![CDATA[]]></script>
+              <rect x="0" y="0" width="34" height="22" class="fold-block fold-test"/><rect x="0" y="24" width="34" height="22" class="fold-block fold-train"/><rect x="0" y="48" width="34" height="22" class="fold-block fold-train"/><rect x="0" y="72" width="34" height="22" class="fold-block fold-train"/><rect x="0" y="96" width="34" height="22" class="fold-block fold-train"/><rect x="0" y="120" width="34" height="22" class="fold-block fold-train"/><rect x="0" y="144" width="34" height="22" class="fold-block fold-train"/><rect x="0" y="168" width="34" height="22" class="fold-block fold-train"/><rect x="0" y="192" width="34" height="22" class="fold-block fold-train"/><rect x="0" y="216" width="34" height="22" class="fold-block fold-train"/>
+              <rect x="52" y="0" width="34" height="22" class="fold-block fold-train"/><rect x="52" y="24" width="34" height="22" class="fold-block fold-test"/><rect x="52" y="48" width="34" height="22" class="fold-block fold-train"/><rect x="52" y="72" width="34" height="22" class="fold-block fold-train"/><rect x="52" y="96" width="34" height="22" class="fold-block fold-train"/><rect x="52" y="120" width="34" height="22" class="fold-block fold-train"/><rect x="52" y="144" width="34" height="22" class="fold-block fold-train"/><rect x="52" y="168" width="34" height="22" class="fold-block fold-train"/><rect x="52" y="192" width="34" height="22" class="fold-block fold-train"/><rect x="52" y="216" width="34" height="22" class="fold-block fold-train"/>
+              <rect x="104" y="0" width="34" height="22" class="fold-block fold-train"/><rect x="104" y="24" width="34" height="22" class="fold-block fold-train"/><rect x="104" y="48" width="34" height="22" class="fold-block fold-test"/><rect x="104" y="72" width="34" height="22" class="fold-block fold-train"/><rect x="104" y="96" width="34" height="22" class="fold-block fold-train"/><rect x="104" y="120" width="34" height="22" class="fold-block fold-train"/><rect x="104" y="144" width="34" height="22" class="fold-block fold-train"/><rect x="104" y="168" width="34" height="22" class="fold-block fold-train"/><rect x="104" y="192" width="34" height="22" class="fold-block fold-train"/><rect x="104" y="216" width="34" height="22" class="fold-block fold-train"/>
+              <text x="175" y="118" class="label">...</text>
+              <rect x="240" y="0" width="34" height="22" class="fold-block fold-train"/><rect x="240" y="24" width="34" height="22" class="fold-block fold-train"/><rect x="240" y="48" width="34" height="22" class="fold-block fold-train"/><rect x="240" y="72" width="34" height="22" class="fold-block fold-train"/><rect x="240" y="96" width="34" height="22" class="fold-block fold-train"/><rect x="240" y="120" width="34" height="22" class="fold-block fold-train"/><rect x="240" y="144" width="34" height="22" class="fold-block fold-train"/><rect x="240" y="168" width="34" height="22" class="fold-block fold-train"/><rect x="240" y="192" width="34" height="22" class="fold-block fold-train"/><rect x="240" y="216" width="34" height="22" class="fold-block fold-test"/>
+            </g>
+            <text x="342" y="138" class="label">Cada fold</text>
+            <text x="342" y="164" class="label">vira teste</text>
+            <text x="342" y="190" class="label">uma vez</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="loocv">
+      <div class="slide-title">
+        <div class="num">9</div>
+        <div>
+          <h2>Leave-One-Out Cross Validation</h2>
+          <p class="subtitle">No Leave-One-Out, cada exemplo individual vira teste uma vez.</p>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="svgbox">
+          <svg width="520" height="285" viewBox="0 0 520 285" role="img" aria-label="Leave One Out Cross Validation">
+            <text x="38" y="34" class="label">Exemplo com 6 observações</text>
+            <g transform="translate(45,65)">
+              <circle cx="20" cy="40" r="12" fill="#1e9bd7"/><circle cx="60" cy="40" r="12" fill="#ffd0c8"/><circle cx="100" cy="40" r="12" fill="#ffd0c8"/><circle cx="140" cy="40" r="12" fill="#ffd0c8"/><circle cx="180" cy="40" r="12" fill="#ffd0c8"/><circle cx="220" cy="40" r="12" fill="#ffd0c8"/>
+              <text x="0" y="85" class="small">Iteração 1: 1 teste, 5 treino</text>
+            </g>
+            <g transform="translate(45,150)">
+              <circle cx="20" cy="40" r="12" fill="#ffd0c8"/><circle cx="60" cy="40" r="12" fill="#1e9bd7"/><circle cx="100" cy="40" r="12" fill="#ffd0c8"/><circle cx="140" cy="40" r="12" fill="#ffd0c8"/><circle cx="180" cy="40" r="12" fill="#ffd0c8"/><circle cx="220" cy="40" r="12" fill="#ffd0c8"/>
+              <text x="0" y="85" class="small">Iteração 2: troca o ponto de teste</text>
+            </g>
+            <text x="330" y="140" class="label">Repete até</text>
+            <text x="330" y="166" class="label">todos serem</text>
+            <text x="330" y="192" class="label">teste uma vez</text>
+          </svg>
+        </div>
+        <div class="card orange">
+          <h3>Quando usar?</h3>
+          <p>O LOOCV pode ser útil quando a base é muito pequena, mas costuma ser mais custoso, porque treina o modelo muitas vezes.</p>
+          <ul>
+            <li>Se há <strong>n</strong> exemplos, são feitos <strong>n</strong> treinamentos.</li>
+            <li>Em bases maiores, 5-Fold ou 10-Fold costuma ser mais prático.</li>
+            <li>Em classificação, muitas vezes usamos <strong>StratifiedKFold</strong>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="sklearn">
+      <div class="slide-title">
+        <div class="num">10</div>
+        <div>
+          <h2>Como isso aparece no Scikit-Learn?</h2>
+          <p class="subtitle">Na prática, usamos funções prontas para calcular os resultados em cada fold.</p>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card blue">
+          <h3>Regressão</h3>
+          <pre style="white-space:pre-wrap;background:#111827;color:#e5e7eb;padding:18px;border-radius:14px;overflow:auto"><code>from sklearn.model_selection import cross_val_score
+from sklearn.linear_model import LinearRegression
+
+modelo = LinearRegression()
+scores = cross_val_score(
+    modelo,
+    X,
+    y,
+    cv=5,
+    scoring="r2"
+)
+
+print(scores)
+print(scores.mean())</code></pre>
+        </div>
+        <div class="card green">
+          <h3>Classificação</h3>
+          <pre style="white-space:pre-wrap;background:#111827;color:#e5e7eb;padding:18px;border-radius:14px;overflow:auto"><code>from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import cross_val_score
+from sklearn.tree import DecisionTreeClassifier
+
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+modelo = DecisionTreeClassifier(random_state=42)
+
+scores = cross_val_score(
+    modelo,
+    X,
+    y,
+    cv=cv,
+    scoring="f1_macro"
+)
+
+print(scores.mean())</code></pre>
+        </div>
+      </div>
+      <div class="callout"><strong>Observação:</strong> em classificação com classes desbalanceadas, a validação estratificada ajuda a manter proporções parecidas das classes em cada fold.</div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-title">
+        <div class="num">11</div>
+        <div>
+          <h2>Resumo da aula</h2>
+          <p class="subtitle">Validação cruzada é uma estratégia para avaliar modelos de forma mais confiável.</p>
+        </div>
+      </div>
+      <div class="grid three">
+        <div class="card blue"><h3>1. Não basta treinar</h3><p>Precisamos avaliar o modelo em dados que ele não usou para aprender.</p></div>
+        <div class="card orange"><h3>2. Uma única divisão pode enganar</h3><p>O desempenho pode depender da sorte na separação treino/teste.</p></div>
+        <div class="card green"><h3>3. Cross Validation reduz esse risco</h3><p>Usamos várias divisões e calculamos um desempenho médio.</p></div>
+      </div>
+      <p class="big-word">Ideia central: medir generalização.</p>
+    </section>
+
+    <section class="slide" id="exercicios">
+      <div class="slide-title">
+        <div class="num">12</div>
+        <div>
+          <h2>Exercícios de fixação</h2>
+          <p class="subtitle">Questões rápidas para verificar se os principais conceitos foram compreendidos.</p>
+        </div>
+      </div>
+      <div class="exercise">
+        <h3>Exercício 1</h3>
+        <p>Explique, com suas palavras, por que avaliar um modelo usando os mesmos dados utilizados no treinamento pode gerar uma conclusão errada.</p>
+        <div class="answer"><strong>Resposta esperada:</strong> porque o modelo pode ter aprendido padrões específicos dos dados de treino. Assim, o desempenho medido nesses mesmos dados tende a ser otimista e pode não representar o comportamento em dados novos.</div>
+      </div>
+      <div class="exercise">
+        <h3>Exercício 2</h3>
+        <p>Em uma validação cruzada com 5 folds, quantas iterações são feitas? Em cada iteração, quantos folds são usados para treino e quantos para teste?</p>
+        <div class="answer"><strong>Resposta esperada:</strong> são feitas 5 iterações. Em cada uma, 4 folds são usados para treino e 1 fold é usado para teste.</div>
+      </div>
+      <div class="exercise">
+        <h3>Exercício 3</h3>
+        <p>Você treinou dois modelos usando 10-Fold Cross Validation. O Modelo A teve F1 médio de 0,78 e o Modelo B teve F1 médio de 0,74. O que ainda seria interessante observar antes de escolher o Modelo A?</p>
+        <div class="answer"><strong>Resposta esperada:</strong> seria importante observar a variação dos resultados entre os folds, o tipo de erro cometido por cada modelo, a matriz de confusão, o custo dos erros, a interpretabilidade e se a diferença é relevante no contexto do problema.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Material elaborado pelo docente com apoio de ferramentas de IA para fins de organização e revisão didática.
+  </footer>
+</body>
+</html>

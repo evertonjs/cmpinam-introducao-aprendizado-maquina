@@ -3,6 +3,8 @@
 venv/
 env/
 ENV/
+myenv/
+myvenv/
 
 # Cache e artefatos do Python
 __pycache__/
@@ -14,11 +16,32 @@ __pycache__/
 .coverage
 htmlcov/
 
+# Jupyter
+.ipynb_checkpoints/
+
+# Modelos e saídas regeneráveis
+AutogluonModels/
+
 # Distribuição e empacotamento
 build/
 dist/
 *.egg-info/
 .eggs/
+
+# Segredos e configurações locais
+.env
+.env.*
+!.env.example
+*.pem
+.vscode/
+.claude/settings.local.json
+
+# Conteúdo privado ou somente local
+/_privado/
+/Atividades/
+/Notas/
+/Prova/
+/referencias-locais/
 
 # Arquivos temporários
 *.tmp
@@ -28,9 +51,6 @@ dist/
 *.swp
 *.swo
 ~$*
-
-# Configurações locais do VS Code
-.vscode/
 
 # Arquivos do sistema operacional
 .DS_Store

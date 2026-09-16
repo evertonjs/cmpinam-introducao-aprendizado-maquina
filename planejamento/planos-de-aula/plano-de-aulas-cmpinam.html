@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CMPINAM · Planos de Aulas 2026/2</title>
+<style>
+  :root{
+    --bg:#f6f8f7;
+    --card:#ffffff;
+    --text:#1f2421;
+    --muted:#68716b;
+    --green:#2e7d4f;
+    --green-soft:#e8f3ec;
+    --line:#dfe6e1;
+    --danger:#a33d3d;
+    --danger-soft:#f7eaea;
+    --shadow:0 10px 28px rgba(29, 52, 39, .08);
+    --radius:20px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.45;
+  }
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:40px 22px 60px;
+  }
+  .hero{
+    background:linear-gradient(135deg,#ffffff 0%,#f1f7f3 100%);
+    border:1px solid var(--line);
+    border-radius:28px;
+    padding:32px;
+    box-shadow:var(--shadow);
+    margin-bottom:28px;
+  }
+  .eyebrow{
+    display:inline-block;
+    font-size:.78rem;
+    font-weight:800;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--green);
+    margin-bottom:10px;
+  }
+  h1{
+    margin:0 0 8px;
+    font-size:clamp(2rem,4vw,3.4rem);
+    line-height:1.05;
+  }
+  .subtitle{
+    margin:0;
+    color:var(--muted);
+    font-size:1.05rem;
+  }
+  section{
+    margin-top:34px;
+  }
+  .section-title{
+    display:flex;
+    align-items:end;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:16px;
+  }
+  .section-title h2{
+    margin:0;
+    font-size:1.45rem;
+  }
+  .section-title p{
+    margin:0;
+    color:var(--muted);
+    font-size:.95rem;
+  }
+  .assessment-grid{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:14px;
+  }
+  .metric{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:20px;
+    box-shadow:var(--shadow);
+  }
+  .metric .label{
+    color:var(--muted);
+    font-size:.9rem;
+    margin-bottom:6px;
+  }
+  .metric .value{
+    font-size:2rem;
+    font-weight:800;
+    color:var(--green);
+  }
+  details{
+    margin-top:14px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:0 18px;
+  }
+
+  .grade-calc{
+    margin-top:14px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:18px;
+    box-shadow:var(--shadow);
+  }
+  .grade-calc-title{
+    font-size:1rem;
+    font-weight:800;
+    margin-bottom:10px;
+  }
+  .legend{
+    margin-top:12px;
+    color:var(--muted);
+    font-size:.9rem;
+  }
+  summary{
+    cursor:pointer;
+    list-style:none;
+    padding:16px 0;
+    font-weight:700;
+  }
+  summary::-webkit-details-marker{display:none}
+  .formula{
+    color:var(--muted);
+    padding:0 0 18px;
+    font-size:.95rem;
+  }
+  .formula code{
+    display:block;
+    background:#f5f7f6;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:10px 12px;
+    margin:8px 0;
+    overflow:auto;
+    color:#2f3933;
+  }
+  .timeline{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+  }
+  .week{
+    position:relative;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:18px 20px 18px 86px;
+    min-height:126px;
+    box-shadow:var(--shadow);
+  }
+  .week.special{
+    border-color:#e6caca;
+    background:linear-gradient(180deg,#fff,#fffafa);
+  }
+  .date-badge{
+    position:absolute;
+    left:18px;
+    top:18px;
+    width:52px;
+    min-height:68px;
+    border-radius:14px;
+    background:var(--green-soft);
+    color:var(--green);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    font-weight:800;
+    line-height:1.05;
+  }
+  .special .date-badge{
+    background:var(--danger-soft);
+    color:var(--danger);
+  }
+  .date-badge .day{font-size:1.35rem}
+  .date-badge .month{
+    margin-top:3px;
+    font-size:.72rem;
+    letter-spacing:.08em;
+  }
+  .week-number{
+    font-size:.78rem;
+    font-weight:800;
+    color:var(--green);
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    margin-bottom:7px;
+  }
+  .special .week-number{color:var(--danger)}
+  .week h3{
+    margin:0 0 5px;
+    font-size:1.06rem;
+  }
+  .week p{
+    margin:0;
+    color:var(--muted);
+    font-size:.94rem;
+  }
+  .footer-note{
+    margin-top:28px;
+    text-align:center;
+    color:#7a847e;
+    font-size:.85rem;
+  }
+  @media (max-width:900px){
+    .assessment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .timeline{grid-template-columns:1fr}
+  }
+  @media (max-width:560px){
+    .wrap{padding:24px 14px 40px}
+    .hero{padding:24px 20px;border-radius:22px}
+    .assessment-grid{grid-template-columns:1fr 1fr}
+    .metric{padding:16px}
+    .week{padding:16px 16px 16px 78px}
+    .date-badge{left:14px;top:16px;width:48px}
+  }
+  @media print{
+    body{background:#fff}
+    .wrap{max-width:none;padding:0}
+    .hero,.metric,.week,details{box-shadow:none}
+    .timeline{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">CMPINAM · 2026/2</div>
+    <h1>Planos de Aulas</h1>
+    <p class="subtitle">Introdução ao Aprendizado de Máquina</p>
+  </header>
+
+  <section>
+    <div class="section-title">
+      <div><h2>Como será a avaliação</h2></div>
+      <p>Distribuição da nota da disciplina</p>
+    </div>
+
+    <div class="assessment-grid">
+      <div class="metric"><div class="label">Atividades Práticas</div><div class="value">10%</div></div>
+      <div class="metric"><div class="label">Projeto da Disciplina</div><div class="value">10%</div></div>
+      <div class="metric"><div class="label">Prova 1 + Prova 2</div><div class="value">70%</div></div>
+      <div class="metric"><div class="label">Simulado ENADE</div><div class="value">10%</div></div>
+    </div>
+
+    <div class="grade-calc">
+      <div class="grade-calc-title">Como a nota é calculada?</div>
+      <div class="formula">
+        <code>NBIM1 = (0,05 × AP) + (0,05 × PR) + (0,35 × P1)</code>
+        <code>NBIM2 = (0,05 × AP) + (0,05 × PR) + (0,35 × P2)</code>
+        <code>NP = (NBIM1 + NBIM2) + (0,10 × SimEnade)</code>
+        <code>NF = máximo {IFA, NP}</code>
+        <div class="legend">
+          AP = Atividades Práticas · PR = Projeto · P1/P2 = Provas · SimEnade = Simulado ENADE · IFA = Instrumento Final de Avaliação
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">
+      <div><h2>Cronograma das aulas</h2></div>
+      <p>Semana, data e conteúdo</p>
+    </div>
+
+    <div class="timeline">
+
+      <article class="week"><div class="date-badge"><div class="day">23</div><div class="month">JUL</div></div><div class="week-number">Semana 01</div><h3>Apresentação da disciplina</h3><p>Critérios de avaliação, introdução ao Aprendizado de Máquina e visão geral do pipeline: dados → preparação → modelagem → avaliação.</p></article>
+
+      <article class="week"><div class="date-badge"><div class="day">30</div><div class="month">JUL</div></div><div class="week-number">Semana 02</div><h3>Ambiente de desenvolvimento</h3><p>Python, Jupyter/Colab e revisão prática de Python aplicada à análise de dados.</p></article>
+
+      <article class="week"><div class="date-badge"><div class="day">06</div><div class="month">AGO</div></div><div class="week-number">Semana 03</div><h3>Análise exploratória de dados</h3><p>EDA, tipos de variáveis, estatística descritiva e visualizações fundamentais.</p></article>
+
+      <article class="week"><div class="date-badge"><div class="day">13</div><div class="month">AGO</div></div><div class="week-number">Semana 04</div><h3>Preparação de dados</h3><p>Valores ausentes, encoding, scaling, divisão treino/teste e prevenção de data leakage.</p></article>
+
+      <article class="week"><div class="date-badge"><div class="day">20</div><div class="month">AGO</div></div><div class="week-number">Semana 05</div><h3>Paradigmas e baseline</h3><p>Paradigmas do Aprendizado de Máquina e construção de baseline supervisionado para regressão ou classificação.</p></article>
+
+      <article class="week"><div class="date-badge"><div class="day">27</div><div class="month">AGO</div></div><div class="week-number">Semana 06</div><h3>Regressão Linear</h3><p>Interpretação de coeficientes, métricas MAE, MSE e RMSE, underfitting e overfitting.</p></article>
+
+      <article class="week"><div class="date-badge"><div class="day">03</div><div class="month">SET</div></div><div class="week-number">Semana 07</div><h3>Regularização</h3><p>Ridge e Lasso e comparação entre modelos para controle de overfitting.</p></article>
+
+      <article class="week"><div class="date-badge"><div class="day">10</div><div class="month">SET</div></div><div class="week-number">Semana 08</div><h3>Classificação com Regressão Logística</h3><p>Matriz de confusão, precisão, recall e F1-score.</p></article>
+
+      <article class="week"><div class="date-badge"><div class="day">17</div><div class="month">SET</div></div><div class="week-number">Semana 09</div><h3>Árvores de decisão e k-NN</h3><p>Comparação de desempenho e revisão geral para prova.</p></article>
+
+      <article class="week special"><div class="date-badge"><div class="day">24</div><div class="month">SET</div></div><div class="week-number">Semana 10</div><h3>Prova 1</h3><p>Avaliação teórica.</p></article>
+
+      <article class="week special"><div class="date-badge"><div class="day">01</div><div class="month">OUT</div></div><div class="week-number">Semana 11</div><h3>Devolutiva da Prova 1 + Projeto</h3><p>Devolutiva da Prova 1 e desenvolvimento do Projeto.</p></article>
+
+      <article class="week"><div class="date-badge"><div class="day">08</div><div class="month">OUT</div></div><div class="week-number">Semana 12</div><h3>Métricas de avaliação</h3><p>Métricas de regressão e classificação aplicadas à comparação justa de modelos.</p></article>
+
+      <article class="week"><div class="date-badge"><div class="day">22</div><div class="month">OUT</div></div><div class="week-number">Semana 13</div><h3>Validação e hiperparâmetros</h3><p>Validação cruzada, hold-out final, GridSearch e RandomizedSearch.</p></article>
+
+      <article class="week"><div class="date-badge"><div class="day">29</div><div class="month">OUT</div></div><div class="week-number">Semana 14</div><h3>Desbalanceamento de classes</h3><p>Impacto nas métricas e estratégias como class_weight e oversampling.</p></article>
+
+      <article class="week"><div class="date-badge"><div class="day">05</div><div class="month">NOV</div></div><div class="week-number">Semana 15</div><h3>Clusterização</h3><p>K-means, DBSCAN e avaliação por coeficiente de silhueta.</p></article>
+
+      <article class="week"><div class="date-badge"><div class="day">12</div><div class="month">NOV</div></div><div class="week-number">Semana 16</div><h3>Ensemble Learning</h3><p>Random Forest e introdução ao Boosting para comparação com modelos simples.</p></article>
+
+      <article class="week special"><div class="date-badge"><div class="day">19</div><div class="month">NOV</div></div><div class="week-number">Semana 17</div><h3>Prova 2</h3><p>Avaliação teórica.</p></article>
+
+      <article class="week special"><div class="date-badge"><div class="day">26</div><div class="month">NOV</div></div><div class="week-number">Semana 18</div><h3>Devolutiva da Prova 2 + Projeto</h3><p>Devolutiva da Prova 2 e entrega/apresentação do Projeto.</p></article>
+
+      <article class="week special"><div class="date-badge"><div class="day">03</div><div class="month">DEZ</div></div><div class="week-number">Semana 19</div><h3>Projeto</h3><p>Entrega/apresentação do Projeto.</p></article>
+
+      <article class="week special"><div class="date-badge"><div class="day">10</div><div class="month">DEZ</div></div><div class="week-number">Semana 20</div><h3>Encerramento</h3><p>Revisão geral dos principais conceitos e conexão com aplicações atuais em IA.</p></article>
+
+    </div>
+  </section>
+
+  <div class="footer-note">CMPINAM · Planos de Aulas · 2026/2</div>
+</div>
+</body>
+</html>

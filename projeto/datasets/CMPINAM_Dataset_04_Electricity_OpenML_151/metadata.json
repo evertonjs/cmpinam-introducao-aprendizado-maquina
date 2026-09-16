@@ -1,0 +1,49 @@
+{
+  "dataset": "Electricity",
+  "openml_dataset_id": 151,
+  "source_url": "https://www.openml.org/d/151",
+  "download_url": "https://openml.org/data/v1/download/2419/electricity.arff",
+  "source_file": "electricity.arff",
+  "source_rows": 45312,
+  "source_columns_including_target": 9,
+  "source_exact_duplicate_rows": 0,
+  "curated_rows": 45312,
+  "curated_columns_including_target": 9,
+  "target": "nsw_price_class",
+  "split": {
+    "method": "sequential holdout by original ARFF row order",
+    "train_rows": 36240,
+    "test_rows": 9072,
+    "train_complete_days": 755,
+    "test_complete_days": 189,
+    "shuffle": false,
+    "stratified": false
+  },
+  "full": {
+    "rows": 45312,
+    "down": 26075,
+    "up": 19237,
+    "down_rate": 0.575455,
+    "up_rate": 0.424545
+  },
+  "train": {
+    "rows": 36240,
+    "down": 21097,
+    "up": 15143,
+    "down_rate": 0.582147,
+    "up_rate": 0.417853
+  },
+  "test": {
+    "rows": 9072,
+    "down": 4978,
+    "up": 4094,
+    "down_rate": 0.548721,
+    "up_rate": 0.451279
+  },
+  "missing_values": 0,
+  "normalized_date_decreases_in_original_order": 5,
+  "date_note": "A sequência das linhas foi preservada. O atributo de data normalizado possui cinco reduções e não permite reconstruir datas civis com segurança.",
+  "license": "Public (as listed by OpenML)",
+  "openml_file_id": 2419,
+  "openml_md5": "8ca97867d960ae029ae3a9ac2c923d34"
+}

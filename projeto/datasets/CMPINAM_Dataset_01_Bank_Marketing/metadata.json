@@ -1,0 +1,43 @@
+{
+  "dataset": "Bank Marketing",
+  "source_url": "https://archive.ics.uci.edu/dataset/222/bank+marketing",
+  "source_file": "bank-additional-full.csv",
+  "source_rows": 41188,
+  "source_columns_including_target": 21,
+  "exact_duplicate_rows_removed": 12,
+  "excluded_columns": {
+    "duration": "A duração só é conhecida após a ligação e deve ser excluída de um modelo realista de decisão pré-contato."
+  },
+  "curated_rows": 41176,
+  "curated_columns_including_target": 20,
+  "target": "subscribed",
+  "split": {
+    "method": "stratified group holdout using one of five folds",
+    "train_fraction": 0.8,
+    "test_fraction": 0.2,
+    "random_state": 42,
+    "stratification_column": "subscribed",
+    "grouping": "hash of all feature columns after excluding duration"
+  },
+  "full": {
+    "rows": 41176,
+    "no": 36537,
+    "yes": 4639,
+    "yes_rate": 0.112663
+  },
+  "train": {
+    "rows": 32940,
+    "no": 29229,
+    "yes": 3711,
+    "yes_rate": 0.112659
+  },
+  "test": {
+    "rows": 8236,
+    "no": 7308,
+    "yes": 928,
+    "yes_rate": 0.112676
+  },
+  "semantic_missing_values": "unknown",
+  "license": "CC BY 4.0",
+  "doi": "10.24432/C5K306"
+}

@@ -1,0 +1,61 @@
+# 📘 Aula: Validação Cruzada e Otimização de Hiperparâmetros
+
+---
+## 1️⃣ Contextualização
+Na última atividade, comparamos **Regressão Logística** e **Árvore de Decisão** usando o dataset *Default of Credit Card Clients*.  
+Observamos que a Árvore de Decisão teve desempenho inferior.  
+Nesta aula, vamos explorar técnicas que podem melhorar esse resultado.
+
+---
+## 2️⃣ Overfitting e Underfitting
+- **Overfitting**: o modelo aprende demais o conjunto de treino, perdendo capacidade de generalizar.  
+- **Underfitting**: o modelo é simples demais e não captura os padrões dos dados.  
+
+🎯 *O objetivo da validação é encontrar o equilíbrio entre os dois.*
+
+---
+## 3️⃣ Hold-out e Validação Cruzada
+- **Hold-out**: divisão simples do dataset em treino e teste (ex: 70% / 30%).  
+- **K-Fold Cross Validation**: divide o dataset em K partes (folds).  
+  O modelo é treinado K vezes, usando cada fold como teste uma vez e os demais como treino.
+
+---
+## 4️⃣ Por que usar K-Fold?
+✅ Utiliza melhor os dados disponíveis.  
+✅ Mede a estabilidade do modelo.  
+✅ Reduz a influência da aleatoriedade da divisão dos dados.
+
+---
+## 5️⃣ Hold-out Final
+Após a validação cruzada, é importante manter um conjunto de **teste final** — nunca usado na validação —  
+para medir o desempenho real do modelo em dados completamente novos.
+
+---
+## 6️⃣ Otimização de Hiperparâmetros
+Cada modelo possui parâmetros que controlam seu comportamento.  
+Exemplo na **Árvore de Decisão**: profundidade máxima, número mínimo de amostras por folha etc.  
+
+🧠 O processo de buscar as melhores combinações desses parâmetros é chamado de **tuning**.
+
+---
+## 7️⃣ GridSearchCV
+- Busca exaustiva em todas as combinações de parâmetros definidos.  
+- Usa validação cruzada interna para avaliar cada combinação.  
+- Retorna os **melhores parâmetros** e o **melhor modelo**.
+
+---
+## 8️⃣ RandomizedSearchCV
+- Testa um número aleatório de combinações dentro dos intervalos definidos.  
+- É mais rápido que o GridSearchCV, especialmente com muitos parâmetros.  
+- Ideal quando o espaço de busca é grande.
+
+---
+## 9️⃣ Aplicação prática
+Usaremos essas técnicas para tentar melhorar o desempenho da **Árvore de Decisão** no dataset de crédito.  
+Após encontrar os melhores parâmetros, faremos uma **avaliação final** com o conjunto de teste.
+
+---
+## 🔟 Discussão final
+- O modelo melhorou após o tuning?  
+- Quais parâmetros mais impactaram o desempenho?  
+- Que outras estratégias poderíamos usar para lidar com o desbalanceamento dos dados?

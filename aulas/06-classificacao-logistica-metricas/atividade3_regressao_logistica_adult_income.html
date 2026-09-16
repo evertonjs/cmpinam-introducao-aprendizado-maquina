@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atividade 3 - Regressão Logística</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      line-height: 1.6;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    h1, h2, h3 {
+      color: #2c3e50;
+    }
+    code {
+      background-color: #eee;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-family: Consolas, monospace;
+    }
+    pre {
+      background-color: #272822;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+    .box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .highlight {
+      background: #fff3cd;
+      padding: 12px;
+      border-left: 5px solid #ffc107;
+      margin: 15px 0;
+      border-radius: 6px;
+    }
+    ul, ol {
+      padding-left: 22px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Atividade 3 - Regressão Logística</h1>
+
+<div class="box">
+  <h2>📌 Objetivo</h2>
+  <p>Aplicar o modelo de <b>Regressão Logística</b> em um problema real de classificação binária, analisando o dataset, observando o nível de balanceamento do atributo alvo, realizando o pré-processamento necessário e avaliando o desempenho do modelo com métricas adequadas.</p>
+</div>
+
+<div class="box">
+  <h2>📊 Dataset</h2>
+  <p>Nesta atividade, utilizaremos o dataset <b>Adult Income (Census)</b>, cujo objetivo é prever se uma pessoa possui renda anual:</p>
+  <ul>
+    <li><b>&gt;50K</b></li>
+    <li><b>&lt;=50K</b></li>
+  </ul>
+
+  <p>Esse é um problema de <b>classificação binária</b>, portanto é adequado para o uso da Regressão Logística.</p>
+
+  <p>Carregue os dados com o código abaixo:</p>
+
+  <pre>import pandas as pd
+
+url = "https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data"
+
+columns = ["age", "workclass", "fnlwgt", "education", "education_num",
+           "marital_status", "occupation", "relationship", "race", "sex",
+           "capital_gain", "capital_loss", "hours_per_week", "native_country", "income"]
+
+df = pd.read_csv(url, names=columns, na_values=" ?", skipinitialspace=True)</pre>
+</div>
+
+<div class="box">
+  <h2>🧪 Parte 1 - Conhecendo os Dados</h2>
+  <p>Antes de treinar qualquer modelo, é importante compreender minimamente a base de dados.</p>
+
+  <ol>
+    <li>Exiba as <b>5 primeiras linhas</b> do dataset.</li>
+    <li>Verifique o <b>número de linhas e colunas</b>.</li>
+    <li>Analise os <b>tipos de dados</b> de cada atributo.</li>
+    <li>Verifique se existem <b>valores ausentes</b>.</li>
+  </ol>
+
+  <div class="highlight">
+    <b>Responda em poucas linhas:</b><br>
+    Existem valores faltantes? Em quais colunas eles aparecem? Esses valores precisam ser tratados antes do treinamento?
+  </div>
+</div>
+
+<div class="box">
+  <h2>⚖️ Parte 2 - Análise do Atributo Alvo</h2>
+  <p>Agora, seu foco deve estar no atributo alvo <code>income</code>.</p>
+
+  <ol>
+    <li>Conte quantas instâncias existem em cada classe do atributo alvo.</li>
+    <li>Calcule a <b>proporção percentual</b> de cada classe.</li>
+    <li>Construa um <b>gráfico de barras</b> para visualizar a distribuição.</li>
+  </ol>
+
+  <div class="highlight">
+    <b>Responda:</b><br>
+    O conjunto de dados parece balanceado ou desbalanceado? Esse comportamento pode influenciar a interpretação da acurácia? Justifique.
+  </div>
+</div>
+
+<div class="box">
+  <h2>🧹 Parte 3 - Pré-processamento</h2>
+  <p>Para usar a Regressão Logística, será necessário preparar os dados.</p>
+
+  <ol>
+    <li>Remova os registros com valores ausentes.</li>
+    <li>Separe os atributos preditores em <code>X</code> e o atributo alvo em <code>y</code>.</li>
+    <li>Transforme as variáveis categóricas em variáveis numéricas usando <b>One-Hot Encoding</b>.</li>
+  </ol>
+
+  <p>Use como base:</p>
+
+  <pre>df = df.dropna()
+
+X = df.drop("income", axis=1)
+y = df["income"]
+
+X = pd.get_dummies(X, drop_first=True)</pre>
+
+  <div class="highlight">
+    <b>Responda:</b><br>
+    Por que foi necessário transformar variáveis categóricas? A coluna alvo precisou passar por esse mesmo processo?
+  </div>
+</div>
+
+<div class="box">
+  <h2>✂️ Parte 4 - Divisão em Treino e Teste</h2>
+  <p>Separe os dados em conjuntos de treino e teste.</p>
+
+  <pre>from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42
+)</pre>
+
+  <div class="highlight">
+    <b>Responda:</b><br>
+    Qual é a função da separação entre treino e teste? O que poderia acontecer se o modelo fosse avaliado com os mesmos dados usados no treinamento?
+  </div>
+</div>
+
+<div class="box">
+  <h2>🤖 Parte 5 - Treinamento do Modelo</h2>
+  <p>Treine um modelo de Regressão Logística com os dados preparados.</p>
+
+  <pre>from sklearn.linear_model import LogisticRegression
+
+model = LogisticRegression(max_iter=1000)
+model.fit(X_train, y_train)</pre>
+
+  <p>Após o treinamento, gere as previsões para o conjunto de teste.</p>
+
+  <pre>y_pred = model.predict(X_test)</pre>
+</div>
+
+<div class="box">
+  <h2>📈 Parte 6 - Avaliação com Matriz de Confusão e Relatório</h2>
+  <p>Analise o desempenho do modelo usando a matriz de confusão e o relatório de classificação.</p>
+
+  <pre>from sklearn.metrics import confusion_matrix, classification_report
+
+print(confusion_matrix(y_test, y_pred))
+print(classification_report(y_test, y_pred))</pre>
+
+  <ol>
+    <li>Identifique os valores de <b>TP</b>, <b>TN</b>, <b>FP</b> e <b>FN</b>.</li>
+    <li>Observe os valores de <b>precision</b>, <b>recall</b> e <b>f1-score</b>.</li>
+    <li>Analise se o modelo teve desempenho semelhante nas duas classes.</li>
+  </ol>
+
+  <div class="highlight">
+    <b>Responda:</b><br>
+    A acurácia foi suficiente para avaliar bem o modelo? Quais métricas ajudaram mais na interpretação dos resultados?
+  </div>
+</div>
+
+<div class="box">
+  <h2>📊 Parte 7 - Curva ROC e AUC</h2>
+  <p>Agora, avalie o modelo com a Curva ROC e a métrica AUC.</p>
+
+  <pre>from sklearn.metrics import roc_curve, roc_auc_score
+import matplotlib.pyplot as plt
+
+y_prob = model.predict_proba(X_test)[:, 1]
+
+fpr, tpr, _ = roc_curve(y_test, y_prob, pos_label=">50K")
+
+plt.figure(figsize=(7,5))
+plt.plot(fpr, tpr, label="Curva ROC")
+plt.plot([0,1], [0,1], linestyle="--")
+plt.xlabel("Taxa de Falsos Positivos (FPR)")
+plt.ylabel("Taxa de Verdadeiros Positivos (TPR)")
+plt.title("Curva ROC")
+plt.legend()
+plt.show()
+
+print("AUC:", roc_auc_score((y_test == ">50K").astype(int), y_prob))</pre>
+
+  <div class="highlight">
+    <b>Responda:</b><br>
+    O que representa a AUC? Quanto mais próximo de 1, melhor ou pior é o classificador? Explique com suas palavras.
+  </div>
+</div>
+
+<div class="box">
+  <h2>🧠 Parte 8 - Reflexão Final</h2>
+  <p>Responda às questões abaixo com base em toda a atividade:</p>
+
+  <ul>
+    <li>O dataset Adult Income parece adequado para classificação binária com Regressão Logística? Por quê?</li>
+    <li>O nível de balanceamento da variável alvo influenciou sua interpretação do desempenho?</li>
+    <li>Quais foram as principais dificuldades do problema: dados ausentes, variáveis categóricas, interpretação das métricas ou outro fator?</li>
+    <li>Que melhorias poderiam ser testadas em uma próxima versão do experimento?</li>
+  </ul>
+</div>
+
+<div class="box">
+  <h2>✅ Entrega</h2>
+  <p>O aluno deve entregar:</p>
+  <ul>
+    <li>o notebook com os códigos desenvolvidos;</li>
+    <li>as respostas interpretativas pedidas ao longo da atividade;</li>
+    <li>os gráficos solicitados;</li>
+    <li>uma breve conclusão final sobre o uso da Regressão Logística nesse problema.</li>
+  </ul>
+</div>
+
+</body>
+</html>

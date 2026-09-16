@@ -1,0 +1,9 @@
+def get_neighbors(train, test_row, k):
+    # Calcula as distâncias euclidianas entre a instância de teste e todas as instâncias de treinamento.
+    distances = [(train_row, euclidean_distance(test_row, train_row)) for train_row in train]
+    
+    # Ordena a lista de distâncias com base nas distâncias em ordem crescente.
+    distances.sort(key=lambda tup: tup[1])
+
+    # Retorna os k vizinhos mais próximos da instância de teste.
+    return [dist[0] for dist in distances[:k]]

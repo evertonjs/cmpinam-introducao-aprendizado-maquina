@@ -1,0 +1,9 @@
+folium
+imbalanced-learn
+jupyterlab
+matplotlib
+numpy
+pandas
+scikit-learn
+seaborn
+xlrd

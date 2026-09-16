@@ -1,0 +1,42 @@
+# Coleta, organização e EDA  
+**Objetivo da aula**  
+- Entender como explorar dados de forma inicial  
+- Identificar problemas e padrões  
+- Preparar o terreno para a modelagem  
+
+---
+
+# Carregar e inspecionar dados  
+- Leitura do dataset no Pandas  
+- Funções úteis: `head()`, `info()`, `describe()`  
+- Identificação de colunas, tipos e valores ausentes  
+
+---
+
+# Tipos de variáveis  
+- **Numéricas:** contínuas (ex.: renda), discretas (ex.: número de quartos)  
+- **Categóricas:** qualitativas (ex.: bairro, classe social)  
+- Por que diferenciar: define o tipo de análise e gráfico a usar  
+
+---
+
+# Estatística descritiva essencial  
+- Média, mediana e moda  
+- Mínimo, máximo e quartis  
+- Desvio padrão e variabilidade  
+
+---
+
+# Visualizações úteis  
+- **Distribuições:** histograma, densidade  
+- **Dispersões:** scatter plots para relações entre atributos  
+- **Boxplots:** detectar outliers e entender a dispersão  
+
+---
+
+# Checklist de qualidade de dados  
+- Há valores nulos?  
+- Há duplicatas?  
+- Escalas estão coerentes?  
+- Outliers devem ser tratados?  
+- Variáveis estão no tipo correto?  
