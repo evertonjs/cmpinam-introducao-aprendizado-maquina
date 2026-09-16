@@ -1,0 +1,14 @@
+column,role,type,source_name,description,missing_in_source,modeling_note
+age,feature,integer,age,Idade em anos,no,Escalonar pode ajudar modelos lineares
+workclass,feature,categorical,workclass,Tipo de vínculo ou setor de trabalho,yes,Imputar somente com informação do treino
+education,feature,categorical,education,Escolaridade declarada,no,education_num foi removida por redundância
+marital_status,feature,categorical,marital-status,Estado civil,no,Pode atuar como proxy social
+occupation,feature,categorical,occupation,Grupo ocupacional,yes,Imputar somente com informação do treino
+relationship,feature,categorical,relationship,Papel familiar informado,no,Pode atuar como proxy de sexo ou estado civil
+race,sensitive_attribute,categorical,race,Categoria racial do registro,no,Recomendada para auditoria de equidade; excluída do baseline
+sex,sensitive_attribute,binary_categorical,sex,Sexo binário conforme a fonte histórica,no,Recomendada para auditoria de equidade; excluída do baseline
+capital_gain,feature,integer,capital-gain,Ganho de capital anual,no,Distribuição muito assimétrica e muitos zeros
+capital_loss,feature,integer,capital-loss,Perda de capital anual,no,Distribuição muito assimétrica e muitos zeros
+hours_per_week,feature,integer,hours-per-week,Horas trabalhadas por semana,no,Verificar valores extremos
+native_country,sensitive_proxy,categorical,native-country,País de origem informado,yes,Pode atuar como proxy de nacionalidade ou etnia
+income_over_50k,target,binary,income,1 se renda anual supera US$ 50 mil; 0 caso contrário,no,Rótulo histórico sem correção por inflação
