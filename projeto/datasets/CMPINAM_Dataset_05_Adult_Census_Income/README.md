@@ -1,89 +1,58 @@
-# Dataset 07 — Adult / Census Income
+# Dataset 05 — Adult / Census Income
 
-## Resumo do problema
+## Visão geral
 
-O objetivo é prever se a renda anual de uma pessoa é **superior a US$ 50 mil** a
-partir de características do Censo dos Estados Unidos de 1994. É um problema de
-**classificação binária**: `income_over_50k = 1` para renda acima de US$ 50 mil e
-`0` para renda menor ou igual a esse valor.
+Dados históricos do Censo dos Estados Unidos de 1994. O objetivo é prever se a renda anual registrada é superior a US$ 50 mil.
 
-O conjunto é útil para estudar pipelines com variáveis numéricas e categóricas,
-valores ausentes, desbalanceamento e avaliação de equidade. Ele não deve ser
-tratado como retrato atual da economia: o limiar monetário não foi corrigido pela
-inflação e os registros são históricos.
+- **Tarefa:** classificação binária
+- **Alvo:** `income_over_50k`
+- **Classes:** `1` para renda superior a US$ 50 mil e `0` para renda menor ou igual
+- **Atributos preditores:** 12
 
 ## Arquivos
 
-- `train.csv`: 32.561 registros do arquivo oficial `adult.data`.
-- `test.csv`: 16.281 registros do arquivo oficial `adult.test`.
-- `metadata.csv`: dicionário das 13 colunas entregues.
-- `split_info.json`: estratégia de divisão, contagens e ausências.
-- `prepare_dataset.py`: reprodução da curadoria a partir dos arquivos UCI.
-- `baseline_example.py`: regressão logística e auditoria descritiva por grupos.
-- `baseline_results.json`: resultados produzidos pelo script de baseline.
-- `LICENSE_SOURCE.md`: fonte, citação e licença.
+- `train.csv`: 32.561 registros para treinamento.
+- `test.csv`: 16.281 registros para avaliação final.
 
-## Curadoria aplicada
+Os arquivos usam UTF-8, vírgula como separador e não possuem coluna de índice. A divisão oficial da fonte foi preservada e deve ser mantida durante os experimentos.
 
-A divisão oficial da UCI foi preservada, evitando criar um corte aleatório novo.
-Os nomes foram convertidos para `snake_case`, os pontos finais dos rótulos do
-arquivo de teste foram removidos e a variável-alvo foi codificada como 0/1.
+## Distribuição das classes
 
-Duas colunas da fonte não estão nos CSVs:
+| Conjunto | Registros | Classe `0` | Classe `1` |
+| --- | ---: | ---: | ---: |
+| Treino | 32.561 | 24.720 | 7.841 |
+| Teste | 16.281 | 12.435 | 3.846 |
 
-- `fnlwgt`: peso amostral do Censo, não uma característica pessoal comum para
-  inferência. Seu uso exigiria uma discussão específica sobre ponderação.
-- `education_num`: codificação ordinal redundante com `education`.
+## Variáveis
 
-Os símbolos `?` da fonte foram convertidos em campos vazios. Eles ocorrem em
-`workclass`, `occupation` e `native_country`. A imputação deve ser ajustada apenas
-no treino e depois aplicada ao teste.
+| Variável | Tipo | Descrição |
+| --- | --- | --- |
+| `age` | inteira | Idade em anos. |
+| `workclass` | categórica | Tipo de vínculo ou setor de trabalho. |
+| `education` | categórica | Escolaridade declarada. |
+| `marital_status` | categórica | Estado civil. |
+| `occupation` | categórica | Grupo ocupacional. |
+| `relationship` | categórica | Papel familiar informado. |
+| `race` | categórica sensível | Categoria racial conforme a fonte histórica. |
+| `sex` | categórica sensível | Sexo binário conforme a fonte histórica. |
+| `capital_gain` | inteira | Ganho de capital anual. |
+| `capital_loss` | inteira | Perda de capital anual. |
+| `hours_per_week` | inteira | Horas trabalhadas por semana. |
+| `native_country` | categórica | País de origem informado. |
+| `income_over_50k` | alvo | Indica se a renda anual supera US$ 50 mil. |
 
-Há perfis repetidos depois da remoção das duas colunas. Eles foram preservados:
-sem identificadores pessoais, linhas iguais podem representar pessoas diferentes.
+## Orientações de uso
 
-## Distribuição da classe
+- Há campos ausentes em `workclass`, `occupation` e `native_country`; ajuste a imputação somente com o conjunto de treino.
+- O alvo é moderadamente desbalanceado. Use métricas como precisão, revocação, F1, ROC-AUC e PR-AUC além da acurácia.
+- `race` e `sex` devem ser considerados em auditorias de desempenho e equidade. Removê-los dos preditores não garante equidade, pois outras variáveis podem atuar como proxies.
+- Os dados e as categorias são históricos; o limiar de renda não está corrigido pela inflação.
+- O conjunto é adequado para ensino e experimentação, não para decisões reais sobre pessoas.
 
-| Parte | Classe 0 | Classe 1 | Positivos |
-|---|---:|---:|---:|
-| Treino | 24.720 | 7.841 | 24,08% |
-| Teste | 12.435 | 3.846 | 23,62% |
+## Fonte e licença
 
-Por causa do desbalanceamento moderado, não use apenas acurácia. Relate também
-precisão, revocação, F1, ROC-AUC e PR-AUC.
+UCI Machine Learning Repository — [Adult](https://archive.ics.uci.edu/dataset/2/adult).
 
-## Variáveis sensíveis e uso responsável
+Licença: [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/).
 
-`race` e `sex` são mantidas para permitir auditoria de desempenho e disparidades,
-mas o baseline as exclui dos preditores. `native_country`, `relationship` e
-`marital_status` também podem funcionar como proxies. Remover atributos sensíveis
-não garante equidade: outras variáveis podem preservar informações correlacionadas.
-
-Este conjunto é indicado para ensino e experimentação. Não deve fundamentar
-decisões reais sobre emprego, crédito, seguro, remuneração ou acesso a serviços.
-Os grupos e rótulos refletem limitações do Censo de 1994, inclusive uma variável
-de sexo estritamente binária na fonte.
-
-## Baseline
-
-Execute:
-
-```bash
-python baseline_example.py
-```
-
-O pipeline faz imputação, padronização numérica, one-hot encoding e regressão
-logística. Ele não usa `race` nem `sex` como preditores e gera métricas globais e
-uma auditoria descritiva por esses grupos. Os resultados são referência de
-sanidade, não meta de desempenho nem comprovação de justiça.
-
-Resultados obtidos na divisão oficial: acurácia 0,851; precisão 0,730; revocação
-0,584; F1 0,649; ROC-AUC 0,904; PR-AUC 0,758. Pequenas diferenças podem ocorrer
-com outras versões das bibliotecas.
-
-## Fonte
-
-Becker, B. & Kohavi, R. (1996). *Adult* [Dataset]. UCI Machine Learning
-Repository. https://doi.org/10.24432/C5XW20
-
-Licença da fonte: CC BY 4.0. Consulte `LICENSE_SOURCE.md`.
+Referência: Becker, B. e Kohavi, R. (1996). *Adult* [Dataset]. UCI Machine Learning Repository. [https://doi.org/10.24432/C5XW20](https://doi.org/10.24432/C5XW20).
